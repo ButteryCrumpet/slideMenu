@@ -2,7 +2,7 @@ $('document').ready(function() {
     $('.ppSlideMenu').ppSlideMenu({});
 });
 
-
+//anim/layout, settings, -- after-square-top/left border-rotate45deg
 (function($){
     
     $.fn.ppSlideMenu = function(settings) {
@@ -25,7 +25,7 @@ $('document').ready(function() {
 
         _.settings = settings;
         _.base = element;
-        _.subPrep = $("<div class='subPrep'></div>");
+        _.slide = $("<div class='SMSlide'></div>");
 
         _.pre_levels = [];
         _.final_levels = [];
@@ -41,6 +41,8 @@ $('document').ready(function() {
         base_level.element = _.base;
         _.makeLevel(base_level);
         _.base.empty();
+        _.slide.appendTo(_.base);
+        
 
         while (_.pre_levels.length) {
 
@@ -73,7 +75,7 @@ $('document').ready(function() {
 
             menuItems.each(function(){
                 let item = new SMItem();
-                item.element = this;
+                item.element = $(this);
                 level.items.push(item);
             });
 
@@ -84,24 +86,31 @@ $('document').ready(function() {
     SlideMenu.prototype.buildLevel = function(level) {
         const _ = this;
 
-        let wrapper = $('<ul class="ppSM-level"></ul>');
+        let wrapper = $('<div class="ppSM-level"><ul></ul></div>');
 
         if (level.parentMenu != null){
-            let parent_return = $('<li>Return</li>');
+            let title =  'Return'; 
+            let parent_return = $('<li>' + title + '</li>');
+
             parent_return.on('click', function(){
-                _.prepSlide(level.parentMenu);
+                _.prevMenu(level.parentMenu);
             });
+
             wrapper.append(parent_return);
         }
 
         for (let i = 0; i < level.items.length; i++) {
             let item = level.items[i];
-            let item_content = $(item.element).children().filter(":not([data-ppSM='submenu'])");
-            let list_content = $('<li>' + item_content.html() + '</li>')
+            let item_content = item.element
+                .children()
+                .filter(":not([data-ppSM='submenu'])")
+                .clone();
+            let list_content = $('<li></li>').append(item_content);
+            
             
             if (item.childMenu != null) {
                 list_content.on('click', function() {
-                    _.prepSlide(item.childMenu);
+                    _.nextMenu(item.childMenu);
                 });
             }
 
@@ -116,15 +125,24 @@ $('document').ready(function() {
 
         let base_build = _.buildLevel(_.final_levels[0])
 
-        $(_.base).append(base_build).addClass('SMBase');
-        $(_.base).append(_.subPrep);
-    }
+        _.slide.append(base_build);
+    };
 
-    SlideMenu.prototype.prepSlide = function(level) {
+    SlideMenu.prototype.prevMenu = function(){
         const _ = this;
+
+        _.slide.animate({left: '+=200px'}, function(){
+            _.slide.children().last().remove();
+        });
+    };
+
+    SlideMenu.prototype.nextMenu = function(level) {
+        const _ = this;
+
         let built_level = _.buildLevel(level);
-        _.base.first().html(built_level);
-    }
+        $("<div class='ppSM-level'></div>").appendTo(_.slide).html(built_level);
+        _.slide.animate({left: '-=200px'});
+    };
 
 })(jQuery);
 
