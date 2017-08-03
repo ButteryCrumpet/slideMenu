@@ -1,0 +1,54 @@
+.ppMobileMenu {
+    position: relative;
+    width: 300px;
+    height: 100vh;
+}
+
+.pMM-subOpen {
+    transition: 1s ease;
+}
+
+.ppMobileMenu ul {
+    padding: 0;
+    margin: 0;
+}
+
+.ppMM-item {
+    border-bottom: 2px solid #6d6e72;
+}
+
+.ppMM-item:hover {
+    background-color: lightseagreen;
+}
+
+.ppMobileMenu li > h1 {
+    margin: 0;
+}
+
+.ppMM-subExists::after {
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    content: "";
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg) translateY(-50%);
+    border-top: 3px solid #6d6e72;
+    border-right: 3px solid #6d6e72;
+}
+
+.ppMM-title {
+    text-align: center;
+}
+
+.ppMM-prevExists::after {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    content: "";
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg) translateY(-50%);
+    border-left: 3px solid #6d6e72;
+    border-bottom: 3px solid #6d6e72;
+}
